@@ -9,7 +9,7 @@ from diffusers import DPMSolverMultistepScheduler
 
 import torch
 model_id = "runwayml/stable-diffusion-v1-5"
-pipeline = DiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16, local_files_only=True)
+pipeline = DiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16, local_files_only=True, safety_checker=None)
 # this solver reduces time needed per generation
 pipeline.scheduler = DPMSolverMultistepScheduler.from_config(pipeline.scheduler.config)
 
@@ -22,7 +22,7 @@ def submit_prompt(prompt: str):
     print(f"Generating image for prompt: {prompt}")
     image = pipeline(prompt, 
                      generator=generator,
-                     num_inference_steps=20
+                     num_inference_steps=30
                      ).images[0]
     image_stream = io.BytesIO()
     image.save(image_stream, format="JPEG")
